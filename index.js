@@ -1,11 +1,29 @@
 const http = require('http')
 const express = require('express')
+const pool = require('./db');
 const cors = require('cors')
 const app = express()
 
 app.use(express.json())
 app.use(cors())
 //const apiUrl = `https://themealdb.com/api/json/v1/1/`;
+
+app.get('/', (request, response) => {
+  response.send('<p> Up and running </p>')
+})
+
+// Routes
+app.get('/api/myrecipes', async (req, res) => {
+  try {
+    const client = await pool.connect();
+    const result = await client.query('SELECT * FROM recipes');
+    res.json(result.rows);
+    client.release();
+  } catch (err) {
+    console.error('Error executing query', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 // GET meal categories
 app.get('/api/categories', async (req, res) => {
