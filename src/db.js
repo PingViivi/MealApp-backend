@@ -4,7 +4,7 @@ require('dotenv').config();
 // Database connection
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: false // Disable SSL
+  ssl: false
 });
 
 
